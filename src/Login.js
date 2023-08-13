@@ -1,8 +1,35 @@
-import React from "react";
-import Pages from './Layout/Pages'
+import React, { useState } from "react";
+import Pages from './Layout/Pages';
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const SignInPage = () => {
+  const [formlogin, setformlogin] = useState({});
+  const [loginError , setLoginError] = useState('');
+  function handleChange(e){
+    setformlogin({
+      ...formlogin,
+    [e.target.name]: e.target.value,
+    })
+    console.log(formlogin);
+  }
+  const handleadminSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/adminlogin', formlogin);
+
+      if (response.data.msg === 'Login successful.') {
+        alert('Login successful!');
+        window.location.href = '/Wizard'; // Redirect to the dashboard or desired page
+      } else {
+        setLoginError('Invalid email or password.');
+      }
+    } catch (error) {
+      console.error('Login failed!', error.response.data.error);
+      setLoginError(error.response.data.error);
+    }
+  };
   return (
     <Pages
     pageContent={(
@@ -28,26 +55,27 @@ const SignInPage = () => {
                     <form>
                       <div className="mb-3">
                         <label className="form-label">Email</label>
-                        <input className="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
+                        <input className="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" onChange={handleChange}/>
                       </div>
                       <div className="mb-3">
                         <label className="form-label">Password</label>
-                        <input className="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
+                        <input className="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" onChange={handleChange} />
+                        {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
                         <small>
                           <Link to="/Forgotpass">Forgot password?</Link>
                         </small>
                       </div>
-                      <div>
+                      {/* <div>
                         <label className="form-check">
                           <input className="form-check-input" type="checkbox" value="remember-me" name="remember-me" checked />
                           <span className="form-check-label">
                             Remember me next time
                           </span>
                         </label>
-                      </div>
+                      </div> */}
                       <div className="text-center mt-3">
                         
-                       <Link to="/Dashboard"> <button type="submit" className="btn btn-lg btn-primary">Sign in</button></Link>
+                       <button type="submit" className="btn btn-lg btn-primary" onClick={handleadminSubmit}>Sign in</button>  
                       </div>
                     </form>
                   </div>

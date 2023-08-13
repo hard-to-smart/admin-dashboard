@@ -59,8 +59,8 @@ const Sidebar = () => {
 
             
 
-            <li className={`sidebar-item ${activePage==='/Calendar'?"active":''}`} onClick={()=>handleActive('/Calendar')}>
-              <Link to="/Calendar" className="sidebar-link">
+            <li className={`sidebar-item ${activePage==='/CalendarDisplay'?"active":''}`} onClick={()=>handleActive('/CalendarDisplay')}>
+              <Link to="/CalendarDisplay" className="sidebar-link">
                 <div className='flex flex-row'><Calendar className="align-middle" />
                 <span  className={`align-middle ${isTextVisible ? "visible" : "hidden"}`}>Calendar</span></div>
               </Link>

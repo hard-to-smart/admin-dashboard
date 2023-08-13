@@ -20,7 +20,9 @@ const Page = ({ pageContent  }) => {
     <div className="content-body overflow-y-auto overflow-x-hidden relative z-0">
       {pageContent}
     </div>
-    
+    {/* <div>
+       <Footer /> 
+    </div> */}
   </div>
 </div>
   )}
