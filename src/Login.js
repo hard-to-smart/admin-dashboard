@@ -2,32 +2,32 @@ import React, { useState } from "react";
 import Pages from './Layout/Pages';
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignInPage = () => {
-  const [formlogin, setformlogin] = useState({});
-  const [loginError , setLoginError] = useState('');
-  function handleChange(e){
-    setformlogin({
-      ...formlogin,
-    [e.target.name]: e.target.value,
-    })
-    console.log(formlogin);
-  }
-  const handleadminSubmit = async (e) => {
+  const [formlogin, setFormLogin] = useState({ email: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+  const navigate= useNavigate();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormLogin((prevForm) => ({ ...prevForm, [name]: value }));
+  };
+
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8080/api/adminlogin', formlogin);
+      const response = await axios.post('http://localhost:8080/api/admin/adminLogin', formlogin);
 
-      if (response.data.msg === 'Login successful.') {
+      if (response.data.success) {
         alert('Login successful!');
-        window.location.href = '/Wizard'; // Redirect to the dashboard or desired page
+        navigate('/Dashboard');
       } else {
         setLoginError('Invalid email or password.');
       }
     } catch (error) {
-      console.error('Login failed!', error.response.data.error);
-      setLoginError(error.response.data.error);
+      console.error('Login failed:', error);
+      setLoginError('An error occurred during login.');
     }
   };
   return (
@@ -75,7 +75,7 @@ const SignInPage = () => {
                       </div> */}
                       <div className="text-center mt-3">
                         
-                       <button type="submit" className="btn btn-lg btn-primary" onClick={handleadminSubmit}>Sign in</button>  
+                       <button type="submit" className="btn btn-lg btn-primary" onClick={handleLoginSubmit}>Sign in</button>  
                       </div>
                     </form>
                   </div>

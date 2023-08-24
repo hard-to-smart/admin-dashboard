@@ -3,7 +3,7 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import Calendar from './Calendar';
 import TicketStatusTable from "./TicketStatusTable";
 import MessageBox from "./MessageBox";
-import Form from './Form'
+// import Form from './Form';
 import ResetPassword from './ResetPassword'
 import Login from './Login'
 import Forgotpass from "./Forgotpass";
@@ -19,7 +19,7 @@ const App = () => {
     <Route exact path="/TicketStatusTable" element={<TicketStatusTable/>}> </Route> 
     <Route exact path="/Calendar" element={<Calendar/>}> </Route> 
     <Route exact path="/MessageBox" element={<MessageBox/>}> </Route> 
-    <Route exact path="/Form" element={<Form/>}> </Route>
+    {/* <Route exact path="/Form" element={<Form/>}> </Route> */}
     <Route exact path="/ResetPassword" element={<ResetPassword/>}> </Route>
     <Route exact path="/" element={<Login/>}> </Route>
     <Route exact path='Forgotpass' element={<Forgotpass/>}> </Route>
