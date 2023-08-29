@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import './app.css'
 import { Calendar, Clipboard, MessageSquare } from 'react-feather';
-import Logo from './stpi.png'
 import { FaUserCircle } from 'react-icons/fa';
 const Sidebar = () => {
   const [isTextVisible, setTextVisible] = useState(() => {
@@ -35,12 +34,12 @@ const Sidebar = () => {
       <nav id="sidebar" className={`sidebar h-full`} >
       
         <div className="sidebar-content">
-          <Link to="/" className="sidebar-brand">
+          <div className="sidebar-brand cursor-default">
             <div className='flex flex-row items-center justify-center'>
               <FaUserCircle size={30}  className="align-middle"/>
             <span className={`align-middle pl-2 text-[20px] ${isTextVisible ? "visible" : "hidden"}`}>Admin</span>
             </div>
-          </Link>
+          </div>
 
           <ul className="sidebar-nav">
             <li className={`sidebar-item ${activePage==='/Dashboard'?"active":''}`} onClick={()=>handleActive('/Dashboard')}>

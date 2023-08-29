@@ -1,17 +1,56 @@
 import "./app.css";
 import React, {useState, useEffect} from "react";
-import { FaTruck, FaUsers, FaDollarSign, FaShoppingCart, FaTasks } from "react-icons/fa";
+import { FaTruck, FaUsers, FaDollarSign, FaShoppingCart, FaTasks, FaCheck, FaCross, FaCrosshairs, FaTimes, FaInfo, FaExclamation, FaRupeeSign } from "react-icons/fa";
 import Pages from './Layout/Pages'
-
+import axios from "axios";
 
 const Dashboard = () => {
-  const [defaultDate, setDefaultDate] = useState("");
+  // const [defaultDate, setDefaultDate] = useState("");
+  const [counts, setCounts] = useState({
+    meetingsAccepted: 0,
+    meetingsDeclined: 0,
+    pendingMeetings: 0,
+    auditoriumCount:0,
+    conferenceRoomCount:0
+  });
 
   useEffect(() => {
-    const date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-    const formattedDate = `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}-${date.getUTCDate()}`;
-    setDefaultDate(formattedDate);
+    // Fetch counts for different statuses
+    const fetchCounts = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/admin/getEventsByStatus');
+        const { success, counts } = response.data;
+        if (success) {
+          setCounts(counts);
+        }
+      } catch (error) {
+        console.error('Error fetching meeting counts:', error);
+      }
+    };
+
+    fetchCounts();
   }, []);
+  const [todaysMeetings, setTodaysMeetings] = useState([]);
+
+  useEffect(() => {
+    const fetchTodaysMeetings = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/admin/getTodaysMeetings');
+        const { success, todayMeetings } = response.data;
+        if (success) {
+          setTodaysMeetings(todayMeetings);
+        }
+      } catch (error) {
+        console.error('Error fetching today\'s meetings:', error);
+      }
+    };
+    fetchTodaysMeetings();
+}, []);
+  // useEffect(() => {
+  //   const date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+  //   const formattedDate = `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}-${date.getUTCDate()}`;
+  //   setDefaultDate(formattedDate);
+  // }, []);
   return (
     <Pages
     pageContent={(
@@ -22,27 +61,26 @@ const Dashboard = () => {
           <div className="w-100">
             <div className="row justify-around">
               {/* column1 */}
-              <div className="col-sm-3">
+              <div className="col-sm-2">
                 {/* Add your fourth card here */}
                 <div className="card">
                   <div className="card-body  bg-success bg-opacity-60">
                     <div className="row">
                       <div className="col mt-0">
-                        <h5 className="card-title text-black">Requests Accepted</h5>
+                        <h5 className="card-title text-black">Meetings Accepted</h5>
                       </div>
 
                       <div className="col-sm-auto">
                         <div className="stat text-primary">
-                          <FaShoppingCart className="align-middle" />
+                          <FaCheck className="align-middle" />
                         </div>
                       </div>
                     </div>
-                    <h1 className="mt-1 mb-3">64</h1>
+                    <h1 className="mt-4 mb-3">{counts.meetingsAccepted}</h1>
                     <div className="mb-0">
-                      <span className="text-danger">
-                        <i className="mdi mdi-arrow-bottom-right"></i> -2.25%
-                      </span>
-                      <span className="text-muted">Since last week</span>
+                      
+                      <br></br>
+                      <br></br>
                     </div>
                   </div>
                 </div>
@@ -50,7 +88,7 @@ const Dashboard = () => {
               
 
               {/* column3 */}
-              <div className="col-sm-3">
+              <div className="col-sm-2">
                 {/* Add your third card here */}
                 <div className="card">
                   <div className="card-body bg-danger bg-opacity-50">
@@ -61,23 +99,22 @@ const Dashboard = () => {
 
                       <div className="col-sm-auto">
                         <div className="stat text-primary">
-                          <FaShoppingCart className="align-middle" />
+                          <FaTimes className="align-middle" />
                         </div>
                       </div>
                     </div>
-                    <h1 className="mt-1 mb-3">64</h1>
+                    <h1 className="mt-4 mb-3">{counts.meetingsDeclined}</h1>
                     <div className="mb-0">
-                      <span className="text-danger">
-                        <i className="mdi mdi-arrow-bottom-right"></i> -2.25%
-                      </span>
-                      <span className="text-muted">Since last week</span>
+                      
+                    <br></br>
+                      <br></br>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* column4 */}
-              <div className="col-sm-3">
+             
+              <div className="col-sm-2">
                 {/* Add your fourth card here */}
                 <div className="card">
                   <div className="card-body  bg-warning">
@@ -88,20 +125,49 @@ const Dashboard = () => {
 
                       <div className="col-sm-auto">
                         <div className="stat text-primary">
-                          <FaShoppingCart className="align-middle" />
+                          <FaExclamation className="align-middle" />
                         </div>
                       </div>
                     </div>
-                    <h1 className="mt-1 mb-3">64</h1>
+                    <h1 className="mt-4 mb-3">{counts.pendingMeetings}</h1>
                     <div className="mb-0">
-                      <span className="text-danger">
-                        <i className="mdi mdi-arrow-bottom-right"></i> -2.25%
-                      </span>
-                      <span className="text-muted">Since last week</span>
+                      
+                    <br></br>
+                      <br></br>
                     </div>
                   </div>
                 </div>
               </div>
+            {/* column3 */}
+            <div className="col-sm-2">
+                {/* Add your 4th card here */}
+                <div className="card">
+                  <div className="card-body bg-info bg-opacity-50">
+                    <div className="row">
+                      <div className="col mt-0">
+                        <h5 className="card-title text-black">Amount Collected</h5>
+                      </div>
+
+                      <div className="col-sm-auto">
+                        <div className="stat text-primary">
+                        <FaRupeeSign className="align-middle" />
+                        </div>
+                      </div>
+                    </div>
+                    <h1 className="mt-1 mb-3">{counts.auditoriumCount * 100 + counts.conferenceRoomCount * 200}</h1>
+                    <div className="mb-0">
+                     
+                    <span className="text-muted">Auditorium: {counts.auditoriumCount * 100}</span>
+               <br></br>
+                    <span className="text-muted">Conference Room: {counts.conferenceRoomCount *200} </span>
+                  
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+             
+
             </div>
           </div>
         </div>
@@ -111,54 +177,37 @@ const Dashboard = () => {
       {/* today's tasks */}
       <div className="row justify-evenly">
       <div className="col-12 col-md-6 col-xxl-3 d-flex order-2 order-xxl-3">
-        <div className="card flex-fill w-100">
+        <div className="card flex-fill w-100 bg-todo">
           <div className="card-header flex flex-row justify-center gap-3">
            
           <FaTasks />
-          <h5 className="card-title mb-0">Today's Meetings</h5>
+          <h5 className="card-title mb-0 ">Today's Meetings</h5>
           </div>
           <div className="card-body d-flex">
             <div className="align-self-center w-100">
               
-              <table className="table mb-0">
-                <tbody>
-                  <tr>
-                    <td>Room 1</td>
-                    <td className="text-end">15:00</td>
+            <table className="table mb-0">
+            <tbody>
+              {/* Render today's meetings here */}
+              {todaysMeetings.length > 0 ? (
+                todaysMeetings.map((meeting, index) => (
+                  <tr key={index}>
+                    <td>{meeting.roomOptions}</td>
+                    <td>{meeting.time}</td>
                   </tr>
-                  <tr>
-                    <td>Room 2</td>
-                    <td className="text-end">13:00</td>
-                  </tr>
-                  <tr>
-                    <td>Room 3</td>
-                    <td className="text-end">10:00</td>
-                  </tr>
-                </tbody>
-              </table>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="2">No meetings today</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
             </div>
           </div>
         </div>
       </div>
     
-
-     
-{/* calendar */}
-<div class="col-12 col-md-6 col-xxl-3 d-flex order-1 order-xxl-1">
-							<div class="card flex-fill">
-								<div class="card-header">
-
-									<h5 class="card-title mb-0">Calendar</h5>
-								</div>
-								<div class="card-body d-flex">
-									<div class="align-self-center w-100">
-										<div class="chart">
-											<div id="datetimepicker-dashboard">{defaultDate}</div>
-										</div>
-									</div>
-								</div>
-							</div>      
-    </div>
     </div>
     </div>
       )}/>

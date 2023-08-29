@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ResetPassword from './ResetPassword';
+import socket from './socketOnetime';
+
 
 import { Bell, MessageSquare, Calendar, User, Settings, HelpCircle, LogOut, Clipboard, AlignLeft, AlignRight } from 'react-feather';
 // import Sidebar from './Sidebar';
@@ -8,8 +10,44 @@ import Logo from "./logo.png"
 // import * as bootstrap from "bootstrap";
 
 
+
+ 
 const TopNav = () => {
-  const [theme, setTheme] = useState('light');
+  // const [theme, setTheme] = useState('light');
+ 
+
+
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  useEffect(() => {
+    // Listen for the notification count update event from the server
+    socket.on('notificationCountUpdate', (count) => {
+
+      // Fetch and update the new notification count from the server
+      fetchNotificationCount();
+    });
+
+    // Fetch the initial notification count when the component mounts
+    fetchNotificationCount();
+
+    // Clean up the socket connection when the component unmounts
+    return () => {
+      // Clean up event listeners
+      socket.off('notificationCountUpdate');
+    };
+  }, []);
+
+  // Function to fetch the notification count from the server
+  const fetchNotificationCount = async () => {
+    try {
+      // Fetch the notification count from the backend
+      const response = await fetch('/api/admin/getNotificationCount');
+      const data = await response.json();
+      setNotificationCount(data.count);
+    } catch (error) {
+      console.error('Error fetching notification count:', error);
+    }
+  };
   const [language, setLanguage] = useState('en');
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isProfileOpen, setProfileOpen] =useState(false);
@@ -72,10 +110,8 @@ const TopNav = () => {
     };
   }, [logOut]);
 
-
-  const handleThemeChange = (e) => {
-    setTheme(e.target.value);
-  };
+ 
+  
   return (
     <div className="wrapper ">
       <div className="main">
@@ -89,7 +125,7 @@ const TopNav = () => {
                 <div className="nav-icon dropdown-toggle cursor-pointer" href="#" id="alertsDropdown" data-bs-toggle="dropdown"  onClick={toggleDropdown}>
                   <div className="position-relative ">
                   <Bell size={30} className="align-middle text-white" />
-                    <div className="indicator bg-yellow-400">4</div>
+                    <div className="indicator bg-yellow-400">{notificationCount}</div>
                   </div>
                 </div>
                 {isDropdownOpen && (
@@ -97,26 +133,26 @@ const TopNav = () => {
                  {/* Add your dropdown content here */}
                  <div className="flex flex-col pt-2 items-center">
                         <h2 className="font-semibold">Request</h2>
-                        <p className="text-[#EFC319] text-[14px] font-[500]">See All</p>
+                        <p className="text-[#EFC319] text-[14px] font-[500]">You have {notificationCount} new Client Requests</p>
                       </div>
                       <hr />
                      
                       {/* friend reqs */}
-                      <div className="flex items-center justify-between ">
+                      {/* <div className="flex items-center justify-between ">
                         <div className="flex flex-col items-center align-middle justify-center">
                         <a href="#" className=" py-2 px-4 text-gray-800 hover:bg-gray-100">Item 1</a>
                     <a href="#" className=" py-2 px-4 text-gray-800 hover:bg-gray-100">Item 2</a>
                     <a href="#" className="py-2 px-4 text-gray-800 hover:bg-gray-100">Item 3</a>
                          </div>
-                        </div>
+                        </div> */}
                         </div>
                     
                 )}
               </li>
-                <li className="nav-item dropdown">
+                {/* <li className="nav-item dropdown">
                 <button  className="bg-transparent border border-white rounded px-2 py-1 text-white">English</button>
-
-                </li>
+                  
+                </li> */}
                 <li className="nav-item dropdown relative">
                 <div className="position-relative cursor-pointer" onClick={toggleProfile}>
                   <User size={30} fontSize={30} className="align-middle text-white" />
